@@ -15,12 +15,19 @@ const getTask = (access_token, space_id, task_id) => (
     client.post(API_URL + '/task.get', { access_token, space_id, task_id }).then(response => response.data)
 )
 
-const updateTask = (access_token, space_id, task_id, data) => (
-    console.log(hello)
-) 
+const updateTask = async (access_token, space_id, task_id, data) => {
+    const result = await client.post(API_URL + '/task.update', {
+        access_token,
+        space_id,
+        task_id,
+        status: data.status
+    })
+    return result.data.task
+}
 
 module.exports = {
     createTask,
     getAllTasklists,
-    getTask
+    getTask,
+    updateTask
 }
