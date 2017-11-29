@@ -15,7 +15,9 @@ const getTask = (access_token, space_id, task_id) => (
     client.post(API_URL + '/task.get', { access_token, space_id, task_id }).then(response => response.data)
 )
 
-const updateTAsk = 
+const updateTask = (access_token, space_id, task_id, data) => (
+    console.log(hello)
+) 
 
 module.exports = {
     createTask,
