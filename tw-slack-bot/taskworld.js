@@ -2,6 +2,7 @@
 
 const client = require('axios')
 const API_URL = 'http://localhost:9801/v1'
+const Actions = require('./actions')
 
 const createTask = (access_token, space_id, title, project_id, list_id) => (
     client.post(API_URL + '/task.create', { access_token, space_id, title, project_id, list_id }).then(response => response.data)
@@ -68,10 +69,9 @@ const createTaskMessageCompleted = (task, userName) => {
       }
     }
 const createTaskMessageWithActions = (task, userName) => {
-    const actions = createActions(task.task_id)
     const due_date_unix = Math.floor(new Date(task.due_date)/ 1000)
     const due_date_string = new Date(task.due_date).toDateString()
-
+    const id = task.task_id
     return {
         "response_type": "in_channel",
         "attachments": [
@@ -98,62 +98,16 @@ const createTaskMessageWithActions = (task, userName) => {
                 }
               ],
             "text": task.title,
-            actions: actions,
+            "actions": [
+              Actions.deleteTaskAction(id),
+              Actions.addDueDateAction(),
+              Actions.completeTaskAction(id),
+            ],
             "footer": "Taskworld Bot",
             "ts": Math.floor(Date.now() / 1000)
           }
         ]
       }
-}
-
-
-const createActions = (id) => {
-    const today = new Date()
-    const tomorrow = new Date(today.getTime() + 24 * 60 * 60 * 1000)
-    const in2Days = new Date(today.getTime() + 2 * 24 * 60 * 60 * 1000)
-    const nextWeek = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000)
-  
-    return ([
-    {
-      "name": "due_date",
-      "text": "Add Due Date",
-      "type": "select",
-      "options": [
-        {
-          "text": "tomorrow",
-          "value": tomorrow.toISOString()
-        },
-        {
-          "text": "in 2 day",
-          "value": in2Days.toISOString()
-        },
-        {
-          "text": "next week",
-          "value": nextWeek.toISOString()
-        }
-      ]
-    },
-    {
-      "name": "completed",
-      "text": "Completed",
-      "style": "primary",
-      "type": "button",
-      "value": id,
-    },
-    {
-      "name": "delete_task",
-      "text": "Delete Task",
-      "style": "danger",
-      "type": "button",
-      "value": id,
-      "confirm": {
-        "title": "Are you sure you want to delete?",
-        "text": "The task will be deleted permanently.",
-        "ok_text": "Yes",
-        "dismiss_text": "No"
-      }
-    }
-  ])
 }
 module.exports = {
     createTask,

@@ -64,10 +64,10 @@ app.post('/twctask', async (req, res) => {
   if (verificationToken !== req.body.token) {
     res.send('token not verified...')
   } else {
+    console.log('returning task')
     const result = await tw.createTask(access_token, space_id, req.body.text, project_id, list_id)
     const task = result.task
-  
+
     res.send(tw.createTaskMessageWithActions(task, req.body.user_name))
   }
-  
 })
