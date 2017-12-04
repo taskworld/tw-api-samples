@@ -1,13 +1,18 @@
 'use strict'
 const Actions = require('./actions')
+const request = require('request')
 
 const taskCompleted = (task, userName) => {
-  const msg = taskMessage(task, userName,  'Your task has been completed!')
+  const msg = taskMessage(task, userName, ':white_check_mark: Your task has been completed!')
+  return msg
+}
+const taskDeleted = (task, userName) => {
+  const msg = { text: ':x: Your task has been deleted!' }
   return msg
 }
 
 const createTask = (task, userName) => {
-  const msg = taskMessage(task, userName, 'Your task has been created!')
+  const msg = taskMessage(task, userName, ':thumbsup: Your task has been created!')
   msg.attachments[0].actions = [
     Actions.deleteTaskAction(task.task_id),
     Actions.addDueDateAction(),
@@ -34,7 +39,7 @@ const taskMessage = (task, userName, pretext) => {
       {
         "fallback": "Required plain-text summary of the attachment.",
         "callback_id": task.task_id,
-        "color": "good",
+        "color": "#2eb3b6",
         "pretext": pretext,
         "author_name": userName,
         "title": "Task",
@@ -62,13 +67,33 @@ const taskMessage = (task, userName, pretext) => {
   })
 }
 
-const deleteTask = "task deleted!"
-const invalidAction = "Your action is invalid"
+
+
+const invalidAction = {
+  text: "Your action is invalid"
+}
+
+function sendToSlack(responseURL, JSONmessage) {
+  var postOptions = {
+    uri: responseURL,
+    method: 'POST',
+    headers: {
+      'Content-type': 'application/json'
+    },
+    json: JSONmessage
+  }
+  request(postOptions, (error, response, body) => {
+    if (error) {
+      // handle errors as you see fit
+    }
+  })
+}
 
 module.exports = {
   taskCompleted,
+  taskDeleted,
   createTask,
   updateTask,
-  deleteTask, 
-  invalidAction
+  invalidAction,
+  sendToSlack,
 }

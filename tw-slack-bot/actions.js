@@ -10,12 +10,12 @@ const deleteTaskAction = (id) => ({
   "style": "danger",
   "type": "button",
   "value": id,
-  "confirm": {
-    "title": "Are you sure you want to delete?",
-    "text": "The task will be deleted permanently.",
-    "ok_text": "Yes",
-    "dismiss_text": "No"
-  }
+  // "confirm": {
+  //   "title": "Are you sure you want to delete?",
+  //   "text": "The task will be deleted permanently.",
+  //   "ok_text": "Yes",
+  //   "dismiss_text": "No"
+  // }
 })
 const addDueDateAction = () => {
   const today = new Date()

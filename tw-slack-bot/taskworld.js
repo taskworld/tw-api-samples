@@ -5,13 +5,21 @@ const Actions = require('./actions')
 
 const API_URL = 'http://localhost:9801/v1'
 
-const createTask = (access_token, space_id, title, project_id, list_id) => (
-    Client.post(API_URL + '/task.create', { access_token, space_id, title, project_id, list_id }).then(response => response.data)
-)
+const createTask = async (access_token, space_id, title, project_id, list_id) => {
+    const result = await Client.post(API_URL + '/task.create', { 
+        access_token, 
+        space_id, 
+        title, 
+        project_id, 
+        list_id 
+    })
+    return result.data
+}
 
-const getTask = (access_token, space_id, task_id) => (
-    Client.post(API_URL + '/task.get', { access_token, space_id, task_id }).then(response => response.data)
-)
+const getTask = async (access_token, space_id, task_id) => {
+    const result = await Client.post(API_URL + '/task.get', { access_token, space_id, task_id })
+    return result.data
+}
 
 const updateTask = async (access_token, space_id, task_id, data) => {
     const result = await Client.post(API_URL + '/task.update', {

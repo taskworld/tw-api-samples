@@ -1,9 +1,7 @@
 'use strict'
 
 const express = require('express')
-const request = require('request')
 const bodyParser = require('body-parser')
-const WebClient = require('@slack/client')
 const Promise = require('bluebird')
 
 const tw = require('./taskworld')
@@ -24,15 +22,19 @@ const project_id = process.env.PROJECT_ID
 const STATUS_COMPLETED = 2
 
 const app = express()
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: true }))
+const urlencodedParser = bodyParser.urlencoded({ extended: false })
+
 app.listen(PORT, () => console.log('listening on port:', PORT))
 
-app.post('/actions', async (req, res) => {
+app.post('/actions', urlencodedParser, async (req, res) => {
+  res.status(200).end() // best practice to respond with 200 status
+
   const payload = JSON.parse(req.body.payload)
+  const responseURL = payload.response_url
+  
   // verify token to make sure the request is coming from slack
   if (verificationToken !== payload.token) {
-    res.send('token not verified...')
+    res.status(403).end('Access forbidden')
   } else {
     const actions = payload.actions
     const userName = req.body.user_name
@@ -53,28 +55,28 @@ app.post('/actions', async (req, res) => {
             msg = message.updateTask(task, userName)
             break;
           case DELETE_TASK:
-            const result = await tw.deleteTask(access_token, space_id, task_id)
-            if (result.ok === true) {
-              msg = message.deleteTask
-            } else {
-              throw new Error('could not delete task')
-            }
+            await tw.deleteTask(access_token, space_id, task_id)
+            msg = message.taskDeleted()
             break;
           default:
-            msg = message.invalidAction
             break;
         }
       }, { concurrency: 5 })
-      res.send(msg)
+      msg.replace_original = true
+      message.sendToSlack(payload.response_url, msg)
     } catch (e) {
       res.send('error: ' + e)
     }
   }
 })
 
-app.post('/twctask', async (req, res) => {
-  if (verificationToken !== req.body.token) {
-    res.send('token not verified...')
+app.post('/twctask', urlencodedParser, async (req, res) => {
+  res.status(200).end() // best practice to respond with 200 status
+  const reqBody = req.body 
+  const responseURL = reqBody.response_url
+
+  if (verificationToken !== reqBody.token) {
+    res.status(403).end('Access forbidden')
   } else {
     const taskTitle = req.body.text
     const userName = req.body.user_name
@@ -82,6 +84,6 @@ app.post('/twctask', async (req, res) => {
     const result = await tw.createTask(access_token, space_id, taskTitle, project_id, list_id)
     const task = result.task
     const msg = message.createTask(task, userName)
-    res.send(msg)
+    message.sendToSlack(responseURL, msg)
   }
 })
