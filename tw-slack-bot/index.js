@@ -54,7 +54,7 @@ app.post('/actions', async (req, res) => {
         }
         break;
       default:
-          res.send("Oh no, something went wrong...")
+          res.send("Oh no, something went wrong... no actions specified.")
         break;
     }
   }, { concurrency: 5 })
