@@ -26,7 +26,7 @@ An example .env file can be found under .env.sample
 1. Setup environment variables (See .env.sample).
 2. Setup your slack bot.
 3. Setup your slash commands to call the `/twctask` route.
-4. Setup your interactive commands to call the `/actions` route.
+4. Setup your interactive components to call the `/actions` route.
 3. Setup a tunnel from your localhost to your slack bot slash commands.
 4. yarn && yarn start
 5. In your channel setup with your slack bot, try `/twctask hello world` and a task should be created.
