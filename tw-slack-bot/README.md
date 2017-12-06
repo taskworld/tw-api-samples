@@ -12,14 +12,14 @@ A demonstration video of the final bot can be found on XXXXXX
 ## Environment Variables
 An example .env file can be found under .env.sample
 
-`CLIENT_ID` - Slack client ID
-`CLIENT_SECRET` - Slack client secret
-`VERIFICATION_TOKEN` - verification token from Slack
-`PORT` - port for development
-`ACCESS_TOKEN` - access token from [Taskworld API](https://api.taskworld.com)
-`SPACE_ID` - ID of your workspace on taskworld. Can be fetched from [Taskworld API](https://api.taskworld.com)
-`PROJECT_ID`- ID of the project you want to create tasks. Can be fetched from [Taskworld API](https://api.taskworld.com)
-`LIST_ID` - ID of the tasklist you want to create tasks. Can be fetched from [Taskworld API](https://api.taskworld.com)
+- `CLIENT_ID` - Slack client ID
+- `CLIENT_SECRET` - Slack client secret
+- `VERIFICATION_TOKEN` - verification token from Slack
+- `PORT` - port for development
+- `ACCESS_TOKEN` - access token from [Taskworld API](https://api.taskworld.com)
+- `SPACE_ID` - ID of your workspace on taskworld. Can be fetched from [Taskworld API](https://api.taskworld.com)
+- `PROJECT_ID`- ID of the project you want to create tasks. Can be fetched from [Taskworld API](https://api.taskworld.com)
+- `LIST_ID` - ID of the tasklist you want to create tasks. Can be fetched from [Taskworld API](https://api.taskworld.com)
 
 
 ## Quick Start Guide
