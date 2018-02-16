@@ -73,8 +73,8 @@ const invalidAction = {
   text: "Your action is invalid"
 }
 
-function sendToSlack(responseURL, JSONmessage) {
-  var postOptions = {
+const sendToSlack = (responseURL, JSONmessage) => {
+  const postOptions = {
     uri: responseURL,
     method: 'POST',
     headers: {
